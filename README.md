@@ -103,26 +103,26 @@ and decision-making.
 
 ### Key Learnings
 
--Built a complete ETL pipeline for cleaning and loading real-world datasets.
--Strengthened understanding of relational database design and normalization.
--Applied SQL joins, aggregations, and OLAP concepts to answer business questions.
--Learned when and why NoSQL databases are preferable over relational databases.
--Designed and implemented a star-schema data warehouse for analytical workloads.
--Improved documentation and project structuring using GitHub best practices.
+- Built a complete ETL pipeline for cleaning and loading real-world datasets.
+- Strengthened understanding of relational database design and normalization.
+- Applied SQL joins, aggregations, and OLAP concepts to answer business questions.
+- Learned when and why NoSQL databases are preferable over relational databases.
+- Designed and implemented a star-schema data warehouse for analytical workloads.
+- Improved documentation and project structuring using GitHub best practices.
 
 ### Challenges Faced
 
 ## Data Quality Issues
--Dealt with missing values, duplicates, and inconsistent formats.
--Solved using pandas-based data cleaning and validation logic.
+- Dealt with missing values, duplicates, and inconsistent formats.
+- Solved using pandas-based data cleaning and validation logic.
 
 ## Database Modeling
--Understanding normalization and dimensional modeling required careful planning.
--Addressed by clearly separating transactional, analytical, and NoSQL use cases.
+- Understanding normalization and dimensional modeling required careful planning.
+- Addressed by clearly separating transactional, analytical, and NoSQL use cases.
 
 ## Tooling & Environment Setup
--Managing multiple databases and tools was initially challenging.
--Resolved through incremental testing and structured execution steps.
+- Managing multiple databases and tools was initially challenging.
+- Resolved through incremental testing and structured execution steps.
 
 ## Setup Instructions
 
