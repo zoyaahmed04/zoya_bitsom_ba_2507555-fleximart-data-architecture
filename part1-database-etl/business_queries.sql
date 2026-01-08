@@ -1,41 +1,65 @@
 USE fleximart;
 
--- Total revenue from completed orders
-SELECT SUM(quantity * unit_price) AS total_revenue
-FROM sales
-WHERE status = 'Completed';
+-- =====================================================
+-- Query 1: Customer Purchase History
+-- Business Question:
+-- Generate a detailed report showing each customer's name,
+-- email, total number of orders placed, and total amount spent.
+-- Include only customers who have placed at least 2 orders
+-- and spent more than ₹5,000.
+-- =====================================================
 
--- Total completed orders
-SELECT COUNT(*) AS total_completed_orders
-FROM sales
-WHERE status = 'Completed';
-
--- Top 5 best-selling products
-SELECT p.product_name,
-       SUM(s.quantity) AS total_units_sold
+SELECT
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+    c.email,
+    COUNT(s.transaction_id) AS total_orders,
+    SUM(s.quantity * s.unit_price) AS total_spent
 FROM sales s
-JOIN products p ON s.product_id = p.product_id
+JOIN customers c
+    ON s.customer_id = c.customer_id
 WHERE s.status = 'Completed'
-GROUP BY p.product_name
-ORDER BY total_units_sold DESC
-LIMIT 5;
+GROUP BY c.customer_id, customer_name, c.email
+HAVING COUNT(s.transaction_id) >= 2
+   AND SUM(s.quantity * s.unit_price) > 5000
+ORDER BY total_spent DESC;
 
--- Revenue by category
-SELECT p.category,
-       SUM(s.quantity * s.unit_price) AS category_revenue
+-- =====================================================
+-- Query 2: Product Sales Analysis
+-- Business Question:
+-- For each product category, show the number of different
+-- products sold, total quantity sold, and total revenue generated.
+-- Include only categories with revenue greater than ₹10,000.
+-- =====================================================
+
+SELECT
+    p.category,
+    COUNT(DISTINCT p.product_id) AS num_products,
+    SUM(s.quantity) AS total_quantity_sold,
+    SUM(s.quantity * s.unit_price) AS total_revenue
 FROM sales s
-JOIN products p ON s.product_id = p.product_id
+JOIN products p
+    ON s.product_id = p.product_id
 WHERE s.status = 'Completed'
 GROUP BY p.category
-ORDER BY category_revenue DESC;
+HAVING SUM(s.quantity * s.unit_price) > 10000
+ORDER BY total_revenue DESC;
 
--- Top customers by spending
-SELECT c.customer_id,
-       CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
-       SUM(s.quantity * s.unit_price) AS total_spent
-FROM sales s
-JOIN customers c ON s.customer_id = c.customer_id
-WHERE s.status = 'Completed'
-GROUP BY c.customer_id, customer_name
-ORDER BY total_spent DESC
-LIMIT 5;
+-- =====================================================
+-- Query 3: Monthly Sales Trend (2024)
+-- Business Question:
+-- Show monthly sales trends for the year 2024, including
+-- cumulative revenue.
+-- =====================================================
+
+SELECT
+    MONTHNAME(transaction_date) AS month_name,
+    COUNT(transaction_id) AS total_orders,
+    SUM(quantity * unit_price) AS monthly_revenue,
+    SUM(SUM(quantity * unit_price)) OVER (
+        ORDER BY MONTH(transaction_date)
+    ) AS cumulative_revenue
+FROM sales
+WHERE status = 'Completed'
+  AND YEAR(transaction_date) = 2024
+GROUP BY MONTH(transaction_date), MONTHNAME(transaction_date)
+ORDER BY MONTH(transaction_date);
